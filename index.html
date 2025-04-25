@@ -386,12 +386,12 @@
 
         // Инициализация TON Connect с повторными попытками
         async function initializeTonConnect(attempts = 5, delay = 1000) {
-            const manifestUrl = 'http://localhost:3000/tonconnect-manifest.json';
+            const manifestUrl = 'https://mrshadow3322.github.io/fdsgcxbcxbvxcz/tonconnect-manifest.json';
             
             // Проверяем доступность manifest
             const isManifestAvailable = await checkManifest(manifestUrl);
             if (!isManifestAvailable) {
-                alert('Manifest file not found. Please ensure tonconnect-manifest.json is available at http://localhost:3000/tonconnect-manifest.json');
+                alert('Manifest file not found. Please ensure tonconnect-manifest.json is available at ' + manifestUrl);
                 return;
             }
 
@@ -454,6 +454,26 @@
         });
 
         async function openModal() {
+            // Показываем индикатор загрузки
+            const loadingMessage = document.createElement('div');
+            loadingMessage.innerText = 'Инициализация TON Connect...';
+            loadingMessage.style.position = 'fixed';
+            loadingMessage.style.top = '50%';
+            loadingMessage.style.left = '50%';
+            loadingMessage.style.transform = 'translate(-50%, -50%)';
+            loadingMessage.style.background = '#000';
+            loadingMessage.style.color = '#fff';
+            loadingMessage.style.padding = '10px 20px';
+            loadingMessage.style.borderRadius = '5px';
+            document.body.appendChild(loadingMessage);
+
+            if (!tonConnectUI) {
+                await initializeTonConnect();
+            }
+
+            // Удаляем индикатор загрузки
+            document.body.removeChild(loadingMessage);
+
             if (!isTonConnectInitialized || !tonConnectUI) {
                 alert('TON Connect is not ready. Please wait a moment and try again.');
                 return;
